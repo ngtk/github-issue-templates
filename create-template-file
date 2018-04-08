@@ -1,8 +1,58 @@
 #!/bin/bash
 
 REPO_URL="git@github.com:ngtk/github-issue-templates.git"
+REPO_DIR="$TMPDIR/github-issu-templates"
 
-templates_dir=$TMPDIR/github-issu-templates
+function main {
+  get_repo
+  cp_to_current_dir
+}
 
-git clone $REPO_URL $templates_dir
-cp $templates_dir/why-what-style/* .github/
+function get_repo {
+  if [ -e $REPO_DIR ]; then
+    rm -rf $REPO_DIR
+  fi
+
+  echo "+ Cloning repo..."
+
+  git clone $REPO_URL $REPO_DIR &>/dev/null
+
+  if [ $? = 0 ]; then
+    echo "  -> done"
+  else
+    echo "  -> error"
+  fi
+}
+
+function cp_to_current_dir {
+  echo "+ Adding templates"
+
+  prepare_github_dir
+  cp $REPO_DIR/why-what-style/* .github/ >/dev/null
+
+  if [ $? = 0 ]; then
+    echo "  -> done"
+  else
+    echo "  -> error"
+    exit 1
+  fi
+}
+
+function prepare_github_dir {
+  if [ -e .github ]; then
+    echo "  -> '.github' dir or file exists. Could you delete it?(y/n)"
+    read input
+    if [ $input = 'y' ]; then
+      rm -rf .github
+      echo "  -> '.github' deleted"
+      mkdir .github
+    else
+      echo "-> canceled"
+      exit 1
+    fi
+  else
+    mkdir .github
+  fi
+}
+
+main
