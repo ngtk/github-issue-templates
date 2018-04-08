@@ -1,0 +1,8 @@
+#!/bin/bash
+
+REPO_URL="git@github.com:ngtk/github-issue-templates.git"
+
+templates_dir=$TMPDIR/github-issu-templates
+
+git clone $REPO_URL $templates_dir
+cp $templates_dir/why-what-style/* .github/
