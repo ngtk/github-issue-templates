@@ -42,7 +42,7 @@ function prepare_github_dir {
   if [ -e .github ]; then
     echo "  -> '.github' dir or file exists. Could you delete it?(y/n)"
     read input
-    if [ $input = 'y' ]; then
+    if [ "$input" = 'y' ]; then
       rm -rf .github
       echo "  -> '.github' deleted"
       mkdir .github
